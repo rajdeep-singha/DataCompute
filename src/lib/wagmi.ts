@@ -13,7 +13,7 @@ export const rabdiChain = rabdi({ accessKey: import.meta.env.VITE_ARKIV_ACCESS_K
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "dataverify-local"
 
 export const wagmiConfig = getDefaultConfig({
-  appName: "DataVerify",
+  appName: "Tracer",
   projectId,
   chains: [rabdiChain],
   transports: { [rabdiChain.id]: http() },

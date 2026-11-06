@@ -46,7 +46,7 @@ export function Docs() {
       <header className="max-w-2xl">
         <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">Formulas &amp; models</h1>
         <p className="mt-3 text-zinc-400">
-          Every number DataVerify produces is computed, not hand-set. This page is the reference:
+          Every number Tracer produces is computed, not hand-set. This page is the reference:
           how prices, severities and verification verdicts are derived.
         </p>
       </header>
@@ -55,7 +55,7 @@ export function Docs() {
         <p className="text-sm text-zinc-400">
           A dataset&rsquo;s price is the base price scaled by how valuable the data measurably is.
           Five dimensionless factors compose multiplicatively; verifiable data earns a premium, which
-          is the whole point of DataVerify.
+          is the whole point of Tracer.
         </p>
         <Formula>{`price = basePrice · φ · γ · δ · ι · ρ        DPI = φ · γ · δ · ι · ρ
 

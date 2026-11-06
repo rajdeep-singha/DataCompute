@@ -5,5 +5,5 @@ export function BrandMark({ className = "" }: { className?: string }) {
 }
 
 export function Brand() {
-  return <Link to="/" className="dv-brand"><BrandMark /><span>DataVerify<span className="brand-dot">.</span></span></Link>
+  return <Link to="/" className="dv-brand"><BrandMark /><span>Tracer<span className="brand-dot">.</span></span></Link>
 }

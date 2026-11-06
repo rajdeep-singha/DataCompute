@@ -42,7 +42,7 @@ export function TelegramSettings() {
       <aside className="telegram-preview" aria-labelledby="telegram-preview-title">
         <p className="dashboard-eyebrow" id="telegram-preview-title">EXAMPLE NOTIFICATION</p>
         <div className="telegram-message">
-          <span className="telegram-message-name">DataVerify</span>
+          <span className="telegram-message-name">Tracer</span>
           <strong>🧪 SIMULATION — Diamond finding</strong>
           <p>LI.FI Diamond · Polygon<br /><b>CRITICAL</b></p>
           <p>Unexpected function added:<br /><code>emergencyWithdraw(address,uint256)</code></p>

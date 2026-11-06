@@ -1,6 +1,6 @@
 # Arkiv schema
 
-DataVerify's own data lives on Arkiv (Rabdi testnet). The watcher writes two
+Tracer's own data lives on Arkiv (Rabdi testnet). The watcher writes two
 named schemas; the alert page and the public query read them back.
 
 ## `upgrade.alert`

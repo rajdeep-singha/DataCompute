@@ -208,7 +208,7 @@ const stopMonitor = startMonitor(async (name, fn) => {
   try { await fn() } finally { writerBusy = null }
 })
 const server = app.listen(port, host, () => {
-  console.log(`DataVerify relayer on http://localhost:${port}`)
+  console.log(`Tracer relayer on http://localhost:${port}`)
   console.log(`writing Arkiv entities as ${relayerAddress}`)
   console.log(`Telegram delivery ${telegramConfigured() ? "enabled" : "disabled (configure TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID)"}`)
 })

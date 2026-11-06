@@ -12,7 +12,7 @@ export async function discoverTelegramChats(token: string, announce: (line: stri
     } catch { throw new Error("Could not reach Telegram. Check your internet connection and try again. Your token has not been printed.") }
     const code = body.error_code ?? response.status
     if (code === 401 || code === 404) throw new Error("Telegram rejected the bot token. Copy the complete API token from @BotFather into the root .env.")
-    if (code === 409) throw new Error("Another application is receiving updates for this bot. Stop its polling process, or use a dedicated bot for DataVerify.")
+    if (code === 409) throw new Error("Another application is receiving updates for this bot. Stop its polling process, or use a dedicated bot for Tracer.")
     if (code === 429) throw new Error("Telegram is rate limiting requests. Wait a minute, then try again.")
     if (!response.ok || !body.ok || body.result === undefined) throw new Error("Telegram could not complete chat discovery. Try again shortly.")
     return body.result

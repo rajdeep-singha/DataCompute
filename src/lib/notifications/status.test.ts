@@ -15,12 +15,12 @@ test("status verifies bot identity, shares concurrent lookups and strips secrets
   let calls = 0
   const request: typeof fetch = async () => {
     calls++
-    return new Response(JSON.stringify({ ok: true, result: { is_bot: true, username: "DataVerifyBot", first_name: "DataVerify", id: 123 } }))
+    return new Response(JSON.stringify({ ok: true, result: { is_bot: true, username: "TracerBot", first_name: "Tracer", id: 123 } }))
   }
   const read = createTelegramStatusReader({ TELEGRAM_BOT_TOKEN: "123:private-token", TELEGRAM_CHAT_ID: "-987654321", MONITOR_ENABLED: "true" }, request)
   const results = await Promise.all([read(), read(), read()])
   assert.equal(calls, 1)
-  assert.equal(results[0].botUrl, "https://t.me/DataVerifyBot")
+  assert.equal(results[0].botUrl, "https://t.me/TracerBot")
   assert.equal(results[0].botVerified, true)
   assert.equal(results[0].destinationConfigured, true)
   assert.equal(results[0].monitoringEnabled, true)

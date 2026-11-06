@@ -5,7 +5,7 @@ import { discoverTelegramChats } from "./discover-chats"
 function responses(results: unknown[]): typeof fetch {
   return async () => new Response(JSON.stringify({ ok: true, result: results.shift() }))
 }
-const bot = { is_bot: true, username: "DataVerifyBot" }
+const bot = { is_bot: true, username: "TracerBot" }
 
 test("discovery identifies the actual bot and returns unique private and group destinations", async () => {
   const logs: string[] = []
@@ -16,7 +16,7 @@ test("discovery identifies the actual bot and returns unique private and group d
     { channel_post: { chat: { id: -789, type: "channel" } } },
   ]]))
   assert.deepEqual(chats.map(c => c.id), [123, -456, -789])
-  assert.ok(logs[0].includes("https://t.me/DataVerifyBot"))
+  assert.ok(logs[0].includes("https://t.me/TracerBot"))
   assert.equal(logs.join().includes("secret"), false)
 })
 

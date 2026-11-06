@@ -101,7 +101,7 @@ export function ListingForm({ onCreated }: { onCreated: () => void }) {
         </label>
       ) : (
         <p className="rounded-lg border border-dashed border-line px-3 py-2 text-xs text-zinc-400">
-          Compute listings run the DataVerify check pipeline on a token the buyer names, and return
+          Compute listings run the Tracer check pipeline on a token the buyer names, and return
           fresh erc20 / list-match / eip1967 results after payment.
         </p>
       )}

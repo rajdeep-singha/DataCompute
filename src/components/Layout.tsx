@@ -16,5 +16,5 @@ export function Layout() {
     window.addEventListener("keydown", close)
     return () => { document.body.style.overflow = previous; window.removeEventListener("keydown", close) }
   }, [menuOpen])
-  return <div className="shell dashboard-shell"><a className="skip-to-content" href="#dashboard-content">Skip to content</a><Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} /><div className="dashboard-body"><DashboardHeader pathname={pathname} menuOpen={menuOpen} onMenuToggle={() => setMenuOpen(value => !value)} /><main className="shell-main dashboard-main" id="dashboard-content"><Outlet /></main><footer className="dashboard-footer"><span>DataVerify · Public verification workspace</span><span>Evidence on Arkiv ↗</span></footer></div></div>
+  return <div className="shell dashboard-shell"><a className="skip-to-content" href="#dashboard-content">Skip to content</a><Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} /><div className="dashboard-body"><DashboardHeader pathname={pathname} menuOpen={menuOpen} onMenuToggle={() => setMenuOpen(value => !value)} /><main className="shell-main dashboard-main" id="dashboard-content"><Outlet /></main><footer className="dashboard-footer"><span>Tracer · Public verification workspace</span><span>Evidence on Arkiv ↗</span></footer></div></div>
 }

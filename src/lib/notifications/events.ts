@@ -12,7 +12,7 @@ export function notifyProxy(args: { proxy: Address; name: string; oldImpl: Addre
         ? `⚠ ${args.name} upgraded to UNVERIFIED code`
         : args.severity === "critical"
           ? `⚠ ${args.name} implementation changed`
-          : "DataVerify — Proxy upgrade"
+          : "Tracer — Proxy upgrade"
     const text = [
       headline,
       `Observed at: ${new Date().toISOString()}`,
@@ -35,13 +35,13 @@ export function notifyDiamond(diamond: string, address: Address, result: ChainRe
     const links = [`Contract: ${diamondChain(result.chainId)?.explorer}/address/${address}`, dashboardLink("/diamond")].filter(Boolean).join("\n")
     if (result.verdict === "unreachable" || result.verdict === "unpinned") {
       // Failed simulations must not overwrite live monitoring health.
-      if (!simulated) queue.observe(`${scope}:health`, result.verdict, `DataVerify — Monitoring warning\n${label}\n${result.detail}\n${links}`)
+      if (!simulated) queue.observe(`${scope}:health`, result.verdict, `Tracer — Monitoring warning\n${label}\n${result.detail}\n${links}`)
       return
     }
     const findings = result.findings.map((finding) => ({ ...finding, selectors: [...finding.selectors].sort(), signatures: undefined }))
       .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)))
     const text = [
-      simulated ? "🧪 SIMULATION — Diamond finding" : "DataVerify — Diamond finding",
+      simulated ? "🧪 SIMULATION — Diamond finding" : "Tracer — Diamond finding",
       `Observed at: ${new Date().toISOString()}`,
       `${label} · ${result.severity.toUpperCase()}`, result.detail,
       ...result.findings.slice(0, 8).map((f) => `${f.kind}: ${(f.signatures ?? f.selectors).slice(0, 4).join(", ")}${f.actual ? ` → ${f.actual}` : ""}${f.verified ? ` (${f.verified})` : ""}`),
@@ -49,8 +49,8 @@ export function notifyDiamond(diamond: string, address: Address, result: ChainRe
       "Detection notice; audit evidence may still be pending.",
     ].join("\n")
     if (simulated) { queue.enqueue(text); return }
-    queue.observe(`${scope}:health`, null, undefined, `DataVerify — Monitoring restored\n${label}\n${links}`)
+    queue.observe(`${scope}:health`, null, undefined, `Tracer — Monitoring restored\n${label}\n${links}`)
     queue.observe(`${scope}:risk`, findings.length ? fingerprint(findings) : null, text,
-      `DataVerify — Findings cleared\n${label}\nMatches the pinned manifest again. This is not a security audit.\n${links}`)
+      `Tracer — Findings cleared\n${label}\nMatches the pinned manifest again. This is not a security audit.\n${links}`)
   })
 }

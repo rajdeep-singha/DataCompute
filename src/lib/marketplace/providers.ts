@@ -89,14 +89,14 @@ const researchIntel: Provider = {
   },
 }
 
-// ── Security feed (DataVerify's own upgrade alerts) ─────────────────────────
+// ── Security feed (Tracer's own upgrade alerts) ─────────────────────────────
 const securityFeed: Provider = {
   id: "security-feed",
   kind: "dataset",
   title: "Proxy Upgrade & Admin-Risk feed",
   summary:
     "Every detected proxy upgrade across watched contracts, with Sourcify verification status. The kind of admin-key monitoring auditors and insurers pay for.",
-  preview: "live from DataVerify's watcher · each alert signed on Arkiv by the watcher wallet",
+  preview: "live from Tracer's watcher · each alert signed on Arkiv by the watcher wallet",
   trust: "verified",
   pricing: { basePriceTgml: 0.01, halfLifeDays: 30, rarity: 1.6 },
   columns: [

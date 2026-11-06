@@ -1,6 +1,6 @@
-# DataVerify
+# Tracer
 
-A public record of contract changes. DataVerify watches Ethereum proxies and cross chain diamonds, asks Sourcify whether the new code is verified, and writes the result to Arkiv. A swap to unverified code is the critical signal. The same record sells attested real world data, and a change can reach you in the browser and on Telegram.
+A public record of contract changes. Tracer watches Ethereum proxies and cross chain diamonds, asks Sourcify whether the new code is verified, and writes the result to Arkiv. A swap to unverified code is the critical signal. The same record sells attested real world data, and a change can reach you in the browser and on Telegram.
 
 Built for ETHweek, Build on Arkiv.
 
@@ -62,7 +62,7 @@ The watchlist is USDC, Aave V3 Pool, Compound III cUSDCv3, and Compound III cWET
 
 ## Diamond check
 
-An EIP 2535 diamond has no single implementation. Each function selector points at a facet, and the same diamond often runs on many chains. DataVerify reads `facets()` and `owner()` on each chain, hashes the deployed code, and compares that chain with its own pinned manifest.
+An EIP 2535 diamond has no single implementation. Each function selector points at a facet, and the same diamond often runs on many chains. Tracer reads `facets()` and `owner()` on each chain, hashes the deployed code, and compares that chain with its own pinned manifest.
 
 LI.FI is the pinned diamond. A new or changed facet whose code Sourcify cannot verify, or a new owner, marks that chain critical. A facet moved to a new address with the same code is not a change. A code change at the same address is, because the comparison stores the code hash.
 
@@ -74,7 +74,7 @@ npm run diamond:check -- lifi --simulate 137
 
 ## Marketplace
 
-Aethera publishes NREL irradiance for solar sites on Aptos. Each reading keeps that transaction as its proof. DataVerify attests the readings on Arkiv (`aethera.solar`) and sells the feed. The price is a Data Power Index: freshness, coverage, depth, integrity, and rarity. Verifiable readings earn a premium.
+Aethera publishes NREL irradiance for solar sites on Aptos. Each reading keeps that transaction as its proof. Tracer attests the readings on Arkiv (`aethera.solar`) and sells the feed. The price is a Data Power Index: freshness, coverage, depth, integrity, and rarity. Verifiable readings earn a premium.
 
 Other listings use the same provider shape: research intelligence, the admin risk feed, a DePIN registry, and a rug risk score.
 

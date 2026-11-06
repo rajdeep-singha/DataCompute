@@ -124,7 +124,7 @@ export const ALERT_LIFETIME_DAYS = 30
 
 export const SOURCIFY_API = "https://sourcify.dev/server"
 export const SOURCIFY_USER_AGENT =
-  "DataVerify-UpgradeWatcher/0.1 (+https://github.com/dataverify; hello@dataverify.dev)"
+  "Tracer-UpgradeWatcher/0.1"
 
 /**
  * Swarm evidence (optional bonus). When a Bee node is reachable, the watcher

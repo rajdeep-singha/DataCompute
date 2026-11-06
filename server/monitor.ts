@@ -13,10 +13,10 @@ export function startMonitor(exclusive: (name: string, fn: () => Promise<void>) 
   async function check(name: string, run: () => Promise<unknown>) {
     try {
       await run()
-      recordNotification((q) => q.observe(`monitor:${name}`, null, undefined, `DataVerify — Monitor restored\n${name}`))
+      recordNotification((q) => q.observe(`monitor:${name}`, null, undefined, `Tracer — Monitor restored\n${name}`))
     } catch {
       console.error(`Monitor: ${name} failed; retrying next cycle.`)
-      recordNotification((q) => q.observe(`monitor:${name}`, "failed", `DataVerify — Monitor error\n${name} could not finish. Monitoring or audit persistence may be incomplete; inspect server logs/configuration.`))
+      recordNotification((q) => q.observe(`monitor:${name}`, "failed", `Tracer — Monitor error\n${name} could not finish. Monitoring or audit persistence may be incomplete; inspect server logs/configuration.`))
     }
   }
   async function cycle() {
