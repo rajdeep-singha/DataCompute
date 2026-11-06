@@ -3,6 +3,7 @@ import express, { type NextFunction, type Request, type Response } from "express
 import { BaseError, HttpRequestError, TimeoutError } from "viem"
 import { WATCHLIST } from "../src/config"
 import { runWatch } from "../src/lib/alerts/watcher"
+import { runDiamondCheck } from "../src/lib/diamond/check"
 import { createListing, hasPurchased, relayerAddress, settlePurchase } from "./relayer"
 import { getPayload, savePayload } from "./store"
 
@@ -88,6 +89,17 @@ app.post(
       throw new Error(`simulate must be one of: ${WATCHLIST.map((item) => item.name).join(", ")}`)
     }
     await exclusive("a watcher pass", res, () => runWatch({ simulate, log: console.log }))
+  }),
+)
+
+app.post(
+  "/api/diamond",
+  handler(async (req, res) => {
+    const diamond = String(req.body?.diamond ?? "")
+    const raw = req.body?.simulate
+    const simulate = raw === undefined || raw === null || raw === "" ? undefined : Number(raw)
+    if (simulate !== undefined && !Number.isInteger(simulate)) throw new Error("simulate must be a chain id")
+    await exclusive("a diamond check", res, () => runDiamondCheck({ diamondId: diamond, simulate, log: console.log }))
   }),
 )
 

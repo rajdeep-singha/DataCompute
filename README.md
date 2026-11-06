@@ -151,6 +151,52 @@ upgrades; `--simulate` is the reliable on-demand trigger for the demo.
 Code: [`src/lib/notify.ts`](./src/lib/notify.ts),
 [`src/hooks/useCriticalAlertNotifier.ts`](./src/hooks/useCriticalAlertNotifier.ts).
 
+## Cross-chain diamond check (which chain is malicious?)
+
+An [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535) diamond has no single
+implementation slot: it routes every function selector to a **facet** contract,
+and the same diamond often runs on many chains. The diamond check reads every
+chain's facets through the standard loupe (`facets()`), hashes each facet's
+deployed code, reads `owner()`, and compares each chain with a **pinned
+manifest** of what that chain is expected to run.
+
+Each chain is compared with its own manifest, not with the other chains, because
+real multi-chain diamonds differ on purpose. The LI.FI Diamond
+(`0x1231…4EaE`) runs 42 facets on Ethereum but 29 on Polygon, and it has a
+different owner on Ethereum.
+
+| finding | severity |
+|---------|----------|
+| new function, or a function now running different code, on a facet **unverified** on Sourcify for that chain | **critical** (likely malicious) |
+| owner changed | **critical** |
+| the same change, but the new facet is verified | warning |
+| function removed, or the chain couldn't be read | warning |
+| matches the manifest | info (ok) |
+
+A facet redeployed at a new address with identical code is not a change. Each
+run writes one `diamond.check` entity per chain in a single Arkiv batch, all
+sharing a `run` id, so "which chain is malicious" is a query:
+`diamond = "lifi" AND severity = "critical" ORDER BY run DESC`.
+
+```bash
+npm run diamond:pin -- lifi                  # snapshot all chains as the trusted manifest (review first!)
+npm run diamond:pin -- lifi --days-ago 30    # pin the state from 30 days back (archive RPCs), so the next
+                                             # check shows the real upgrades made since then
+npm run diamond:check -- lifi                # compare every chain, write results to Arkiv
+npm run diamond:check -- lifi --simulate 137 # demo: plant a fake unverified facet on Polygon
+```
+
+In the UI, open the **Diamond check** tab. **Check all chains** runs a check, and
+**Simulate attack** plants a fake unverified `emergencyWithdraw(address,uint256)`
+facet on the chosen chain, for that run only. That chain then shows
+*"⚠ Likely malicious on Polygon"*, while the others stay ok. Pinning is CLI-only
+on purpose: the web server can check, but it can never re-baseline what counts as
+trusted. Public RPCs are used by default; set `RPC_<chainId>` in `.env` to
+override one.
+
+Code: [`src/lib/diamond/`](./src/lib/diamond), manifest in
+[`src/lib/diamond/manifests/lifi.json`](./src/lib/diamond/manifests/lifi.json).
+
 ## Swarm evidence (Arkiv + Swarm bonus)
 
 Each alert can pin an evidence bundle — old + new implementation bytecode and a
@@ -164,3 +210,45 @@ BEE_API_URL=http://localhost:1633 npm run watch -- --reset
 ```
 
 Details in [`arkiv/swarm.md`](./arkiv/swarm.md).
+
+## Project layout
+
+| path | role |
+|------|------|
+| `src/watch.ts` | the watcher: read slots → Sourcify → write alerts + state |
+| `src/lib/sourcify.ts` | Sourcify v2 verification lookup |
+| `src/lib/swarm.ts` | Bee HTTP client — pins evidence bundles to Swarm |
+| `src/lib/evidence.ts` | assembles bytecode + Sourcify metadata bundle |
+| `src/lib/ethereum.ts` | dual-slot (EIP-1967 + legacy) implementation reader |
+| `src/schema.ts` | `upgrade.alert` and `upgrade.state` Arkiv schemas |
+| `src/lib/read-alerts.ts` | filtered reads for the UI |
+| `src/query-alerts.ts` | the public CLI query |
+| `src/components/AlertsViewer.tsx` | the alert page |
+| `src/lib/diamond/` | diamond loupe reader, manifest diff, cross-chain check |
+| `src/components/diamond/DiamondViewer.tsx` | the diamond check page |
+| `src/lib/diamond/` | diamond loupe reader, manifest diff, cross-chain check |
+| `src/components/diamond/DiamondViewer.tsx` | the diamond check page |
+| `arkiv/` | track docs: schema, friction, reach, why-arkiv, how-you-use-arkiv |
+
+## Arkiv usage at a glance
+
+- **Filtering** — indexed `severity`, `verified`, `proxy`, `block`.
+- **Ownership** — alerts trusted only from the watcher wallet (`ownedBy`).
+- **Expiry** — 30-day rolling window; stale alerts drop off.
+- **Mutation** — `upgrade.state` is patched + extended, not appended.
+
+Details in [`arkiv/how-you-use-arkiv.md`](./arkiv/how-you-use-arkiv.md).
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
+
+## How AI was used
+
+Built with Claude Code (Anthropic). AI wrote the watcher, Sourcify client,
+Arkiv schemas/queries, and React UI, and verified each step against live
+mainnet, Sourcify, and Arkiv (not just by compiling). All architectural
+decisions — the two-schema design, dual-slot reading, severity model, and the
+Arkiv-native use of ownership/expiry/filtering — were reviewed and directed by a
+human. External data: the Sourcify v2 API and the Uniswap default token list
+(the latter only in the separate token-checks tool).

@@ -2,6 +2,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useState } from "react"
 import { AlertsViewer } from "./alerts/AlertsViewer"
 import { ChecksViewer } from "./checks/ChecksViewer"
+import { DiamondViewer } from "./diamond/DiamondViewer"
 import { Docs } from "./Docs"
 import { Landing } from "./Landing"
 import { Marketplace } from "./marketplace/Marketplace"
@@ -10,6 +11,7 @@ import { NotifyBell } from "./alerts/NotifyBell"
 const TABS = [
   { id: "home", label: "Home" },
   { id: "alerts", label: "Upgrade alerts" },
+  { id: "diamond", label: "Diamond check" },
   { id: "marketplace", label: "Marketplace" },
   { id: "checks", label: "Verified checks" },
   { id: "docs", label: "Docs" },
@@ -23,9 +25,14 @@ export function App() {
   return (
     <main className="mx-auto w-[min(1180px,calc(100%-2rem))] py-6">
       <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <button type="button" onClick={() => setTab("home")} className="font-serif text-2xl tracking-tight">
+        <button
+          type="button"
+          onClick={() => setTab("home")}
+          className="font-serif text-2xl tracking-tight"
+        >
           DataVerify
         </button>
+
         <nav className="order-last flex w-full flex-wrap gap-2 sm:order-0 sm:w-auto">
           {TABS.map((item) => (
             <button
@@ -42,6 +49,7 @@ export function App() {
             </button>
           ))}
         </nav>
+
         <div className="flex items-center gap-2">
           <NotifyBell />
           {tab === "marketplace" ? (
@@ -53,10 +61,13 @@ export function App() {
           )}
         </div>
       </header>
+
       {tab === "home" ? (
         <Landing onNavigate={setTab} />
       ) : tab === "alerts" ? (
         <AlertsViewer />
+      ) : tab === "diamond" ? (
+        <DiamondViewer />
       ) : tab === "marketplace" ? (
         <Marketplace />
       ) : tab === "checks" ? (

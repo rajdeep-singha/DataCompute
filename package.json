@@ -40,7 +40,9 @@
     "seed:aethera": "tsx src/seed-aethera.ts",
     "seed:market": "tsx src/seed-providers.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "tsx --test src/lib/checks/checks.test.ts"
+    "diamond:pin": "tsx src/diamond-pin.ts",
+    "diamond:check": "tsx src/diamond-check.ts",
+    "test": "tsx --test src/lib/checks/checks.test.ts src/lib/diamond/compare.test.ts"
   },
   "engines": {
     "node": ">=22.10"
