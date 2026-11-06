@@ -37,6 +37,8 @@
     "watch": "tsx src/watch.ts",
     "query": "tsx src/query.ts",
     "query:alerts": "tsx src/query-alerts.ts",
+    "seed:aethera": "tsx src/seed-aethera.ts",
+    "seed:market": "tsx src/seed-providers.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "tsx --test src/lib/checks/checks.test.ts"
   },

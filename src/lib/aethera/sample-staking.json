@@ -1,0 +1,22 @@
+{
+  "generatedAt": 1793939426162,
+  "totalInstallers": 5,
+  "projects": 4,
+  "locations": 3,
+  "byStatus": {
+    "kyc_2": 2,
+    "kyc_0": 1,
+    "kyc_1": 2
+  },
+  "byLocation": {
+    "loc_1": 3,
+    "loc_0": 1,
+    "loc_2": 1
+  },
+  "byProject": {
+    "proj_2": 1,
+    "proj_3": 1,
+    "proj_0": 2,
+    "proj_4": 1
+  }
+}

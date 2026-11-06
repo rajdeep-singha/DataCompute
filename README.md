@@ -61,6 +61,73 @@ npm run watch -- --simulate USDC  # demo: forces a critical (unverified) alert
 npm run watch -- --reset          # delete the watcher's alerts + state, re-baseline
 ```
 
+## Marketplace: Aethera Solar Oracle (verified real-world data)
+
+The marketplace sells **verified data you can't get free** — the flagship being
+the **[Aethera](https://github.com) solar oracle**: NREL annual-average irradiance
+(**DNI / GHI / lat-tilt**, kWh/m²/day) for US solar sites. Aethera fetches it from
+NREL and pushes it **on-chain to Aptos** — so each reading already carries an
+**Aptos transaction proof**. DataVerify re-attests those readings on **Arkiv**
+(schema `aethera.solar`) to make them queryable and sellable.
+
+That's a two-chain provenance chain a buyer can verify end to end:
+
+```
+NREL  →  Aptos (tx proof, source of truth)  →  Arkiv (queryable attestation)  →  buyer
+```
+
+```bash
+npm run seed:aethera   # attests Aethera's readings on Arkiv + creates the listing
+```
+
+**How buyers use it:** connect wallet → the listing shows "✓ N readings attested
+on Arkiv" + the latest reading with its **Aptos tx link** → **Buy** (tGLM on Rabdi)
+→ the backend returns the full feed as a table (DNI/GHI/lat-tilt per site, each row
+linking to its Aptos proof) with **download JSON** and a copy-paste **how-to-use**
+snippet. Consumers: solar-farm investors/insurers, energy-trading dApps,
+carbon-credit verifiers, DePIN protocols that need solar data as an input.
+
+By default the demo runs on a **real Aethera snapshot** bundled with the repo. Set
+`AETHERA_DATA_DIR` to Aethera's `server/data` folder to serve its live output.
+Code: [`src/lib/aethera/`](./src/lib/aethera), [`src/seed-aethera.ts`](./src/seed-aethera.ts).
+
+### More assets (the provider framework)
+
+New marketplace assets plug in as a single **provider** entry
+([`src/lib/marketplace/providers.ts`](./src/lib/marketplace/providers.ts)) — id,
+listing text, Data-Power pricing, column descriptors, and a `load()` that serves
+the records. The backend serves any provider on purchase; the UI renders it
+generically. Seed them with `npm run seed:market`. Shipping today:
+
+| asset | kind | what / why not free | provenance |
+|-------|------|----------------------|------------|
+| **Research Intelligence** | dataset | 96 classified, relevance-scored RWA/carbon/DePIN articles — curation is the product | batch hash attested on Arkiv |
+| **Admin-Risk feed** | dataset | the watcher's own proxy-upgrade history — admin-key monitoring auditors pay for | every alert signed on Arkiv |
+| **DePIN Registry** | dataset | aggregate solar installer/project growth (no PII) | on-chain registry on Aptos |
+| **Rug-Risk score** | compute | name a token → live metadata/proxy/verification risk | computed at purchase |
+
+### Pricing: the Data Power Index
+
+Prices aren't arbitrary — they're computed from the data itself. A dataset's
+**Data Power Index (DPI)** is the product of five dimensionless factors, and the
+price is the base price scaled by it:
+
+```
+price = basePrice · φ · γ · δ · ι · ρ
+        ├ φ freshness = 2^(−ageDays / halfLife)     recent data worth more (clamped 0.1–1)
+        ├ γ coverage  = 1 + 0.5·log2(sites)          more locations, diminishing returns
+        ├ δ depth     = 1 + 0.1·log10(readings)      more data points, diminishing returns
+        ├ ι integrity = completeness · (1 + 0.5·proven)   quality × on-chain-proof premium
+        └ ρ rarity    = per-dataset constant          scarce (not free) > public
+```
+
+`proven` is the share of readings carrying a valid on-chain (Aptos) tx — so
+**verifiable data earns a premium**, which is the whole point of DataVerify. For
+the live Aethera feed this currently yields **DPI ≈ 2.79× → 0.0278 tGLM**
+(freshness 0.66 · coverage 1.79 · depth 1.05 · integrity 1.5 · rarity 1.5). The
+listing card shows this breakdown so buyers see exactly why the price is what it
+is. Code: [`src/lib/marketplace/pricing.ts`](./src/lib/marketplace/pricing.ts).
+
 ## System notifications for malicious upgrades
 
 Click **🔔 Enable alerts** in the header to grant notification permission. The page
