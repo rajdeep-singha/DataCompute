@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Public Sans", sans-serif;
+  --font-serif: "Newsreader", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --color-ink: #121410;
+  --color-panel: #1b2018;
+  --color-line: #31382c;
+  --color-pass: #b6e37a;
+  --color-mismatch: #f0c36a;
+  --color-fail: #f0a090;
+  --color-absent: #9ec4d4;
+  --color-accent: #dff56b;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 420px at 8% -10%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 55%),
+    var(--color-ink);
+  color: #f3f5ee;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
