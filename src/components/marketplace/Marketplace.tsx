@@ -5,7 +5,7 @@ import { useAccount } from "wagmi"
 import { APTOS_EXPLORER_TX } from "../../config"
 import { useDataPower } from "../../hooks/useDataPower"
 import { fetchPayload, settlePurchase } from "../../lib/marketplace/api"
-import { browserClient } from "../../lib/arkiv/read-checks"
+import { arkivTimeoutMessage, browserClient } from "../../lib/arkiv/read-checks"
 import type { DataPower } from "../../lib/marketplace/pricing"
 import { readAttestations, readListings, readPurchases } from "../../lib/marketplace/marketplace"
 import { rabdiChain, wagmiConfig } from "../../lib/wagmi"
@@ -51,7 +51,7 @@ export function Marketplace() {
       setAttestations(attests)
     } catch (caught) {
       setRows([])
-      setError(caught instanceof Error ? caught.message : "could not read listings")
+      setError(arkivTimeoutMessage(caught instanceof Error ? caught.message : "could not read listings"))
     } finally {
       setLoading(false)
     }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { getAddress } from "viem"
 import { DIAMONDS, diamondChain, swarmUrl, ZERO_ADDRESS } from "../../config"
-import { browserClient } from "../../lib/arkiv/read-checks"
+import { arkivTimeoutMessage, browserClient } from "../../lib/arkiv/read-checks"
 import { watcherAddress } from "../../lib/arkiv/watcher-address"
 import { requestDiamondCheck } from "../../lib/diamond/diamond-api"
 import { readDiamondRuns, type DiamondRunRows } from "../../lib/diamond/read-diamond"
@@ -184,11 +184,7 @@ export function DiamondViewer() {
       setRuns(page.runs)
     } catch (caught) {
       const message = caught instanceof Error ? caught.message : "Arkiv query failed"
-      setError(
-        /timeout|fetch|too long/i.test(message)
-          ? "Arkiv didn’t respond. The public Rabdi RPC may be rate limited. Add VITE_ARKIV_ACCESS_KEY and try again."
-          : message,
-      )
+      setError(arkivTimeoutMessage(message))
     } finally {
       setLoading(false)
     }

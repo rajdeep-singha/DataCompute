@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { getAddress, isAddress } from "viem"
 import { ZERO_ADDRESS } from "../../config"
 import { describeQuery } from "../../lib/checks/query-text"
-import { browserClient, readChecks } from "../../lib/arkiv/read-checks"
+import { arkivTimeoutMessage, browserClient, readChecks } from "../../lib/arkiv/read-checks"
 import { EMPTY_FILTERS, STATUSES, type CheckFilters, type CheckRow, type CheckStatus } from "../../types/check"
 import { CheckTable } from "./CheckTable"
 import { FilterPanel } from "./FilterPanel"
@@ -48,12 +48,7 @@ export function ChecksViewer() {
     } catch (caught) {
       setRows([])
       const message = caught instanceof Error ? caught.message : "Arkiv query failed"
-      const lower = message.toLowerCase()
-      setError(
-        lower.includes("timeout") || lower.includes("fetch") || lower.includes("too long")
-          ? "Arkiv didn’t respond. The public Rabdi RPC may be rate limited. Add VITE_ARKIV_ACCESS_KEY and try again."
-          : message,
-      )
+      setError(arkivTimeoutMessage(message))
     } finally {
       setLoading(false)
     }

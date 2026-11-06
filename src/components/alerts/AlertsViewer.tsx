@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { getAddress } from "viem"
 import { swarmUrl, ZERO_ADDRESS } from "../../config"
 import { expiryLabel, shortAddress } from "../../lib/util/format"
-import { browserClient } from "../../lib/arkiv/read-checks"
+import { arkivTimeoutMessage, browserClient } from "../../lib/arkiv/read-checks"
 import { watcherAddress } from "../../lib/arkiv/watcher-address"
 import { readAlerts } from "../../lib/alerts/read-alerts"
 import {
@@ -67,12 +67,7 @@ export function AlertsViewer() {
     } catch (caught) {
       setRows([])
       const message = caught instanceof Error ? caught.message : "Arkiv query failed"
-      const lower = message.toLowerCase()
-      setError(
-        lower.includes("timeout") || lower.includes("fetch") || lower.includes("too long")
-          ? "Arkiv didn’t respond. The public Rabdi RPC may be rate limited. Add VITE_ARKIV_ACCESS_KEY and try again."
-          : message,
-      )
+      setError(arkivTimeoutMessage(message))
     } finally {
       setLoading(false)
     }

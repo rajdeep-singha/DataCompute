@@ -23,11 +23,21 @@ const SELECTION = {
   detail: true,
 } as const
 
+/** Rabdi stalls for several seconds at a time; match the writer’s patience. */
 export function browserClient() {
   return createPublicClient({
     chain: rabdi({ accessKey: import.meta.env.VITE_ARKIV_ACCESS_KEY ?? "" }),
-    transport: http(undefined, { timeout: 8_000, retryCount: 0 }),
+    transport: http(undefined, { timeout: 20_000, retryCount: 3, retryDelay: 1_000 }),
   })
+}
+
+/** Friendly copy for browser Arkiv timeouts — key may already be set. */
+export function arkivTimeoutMessage(raw: string): string {
+  if (!/timeout|fetch|too long/i.test(raw)) return raw
+  if (import.meta.env.VITE_ARKIV_ACCESS_KEY) {
+    return "Arkiv didn’t respond in time. Rabdi is stalling — try again in a moment."
+  }
+  return "Arkiv didn’t respond. The public Rabdi RPC may be rate limited. Add VITE_ARKIV_ACCESS_KEY and try again."
 }
 
 type Reader = ReturnType<typeof browserClient>
