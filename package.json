@@ -30,9 +30,13 @@
   },
   "scripts": {
     "dev": "vite",
+    "server": "tsx watch server/index.ts",
+    "dev:all": "tsx watch server/index.ts & vite",
     "build": "tsc -p tsconfig.json --noEmit && vite build",
     "verify": "tsx src/verify.ts",
+    "watch": "tsx src/watch.ts",
     "query": "tsx src/query.ts",
+    "query:alerts": "tsx src/query-alerts.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "tsx --test src/lib/checks/checks.test.ts"
   },
