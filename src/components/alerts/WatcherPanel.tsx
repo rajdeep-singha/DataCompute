@@ -38,15 +38,15 @@ export function WatcherPanel({ onRun }: WatcherPanelProps) {
   }
 
   return (
-    <section className="mb-4 grid gap-3 rounded-2xl border border-line bg-panel p-4 shadow-2xl">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <section className="mb-4 grid gap-3 rounded-2xl border border-line bg-panel p-3 shadow-2xl sm:p-4">
+      <div className="grid gap-3 sm:gap-4">
         <div>
           <h2 className="font-serif text-lg">Watcher</h2>
           <p className="text-sm text-zinc-400">
             Reads {WATCHLIST.length} proxies on Ethereum now and writes any change to Arkiv.
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center">
           <button
             type="button"
             className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-ink disabled:opacity-60"
@@ -55,27 +55,29 @@ export function WatcherPanel({ onRun }: WatcherPanelProps) {
           >
             {busy === "scan" ? "Scanning…" : "Run watcher now"}
           </button>
-          <select
-            className="rounded-lg border border-line bg-ink px-3 py-2 text-sm text-zinc-100"
-            value={target}
-            disabled={busy !== null}
-            onChange={(event) => setTarget(event.target.value)}
-          >
-            {WATCHLIST.map((item) => (
-              <option key={item.address} value={item.name}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-          <button
-            type="button"
-            className="rounded-lg border border-fail/50 px-3 py-2 text-sm text-fail disabled:opacity-60"
-            disabled={busy !== null}
-            onClick={() => void start("simulate")}
-            title="Writes a clearly labeled fake critical alert for the selected proxy"
-          >
-            {busy === "simulate" ? "Writing…" : "Simulate upgrade"}
-          </button>
+          <div className="grid grid-cols-[1fr_auto] gap-2 sm:flex sm:items-center">
+            <select
+              className="min-w-0 rounded-lg border border-line bg-ink px-3 py-2 text-sm text-zinc-100"
+              value={target}
+              disabled={busy !== null}
+              onChange={(event) => setTarget(event.target.value)}
+            >
+              {WATCHLIST.map((item) => (
+                <option key={item.address} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              className="rounded-lg border border-fail/50 px-3 py-2 text-sm whitespace-nowrap text-fail disabled:opacity-60"
+              disabled={busy !== null}
+              onClick={() => void start("simulate")}
+              title="Writes a clearly labeled fake critical alert for the selected proxy"
+            >
+              {busy === "simulate" ? "Writing…" : "Simulate upgrade"}
+            </button>
+          </div>
         </div>
       </div>
 

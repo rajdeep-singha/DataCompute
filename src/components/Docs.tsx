@@ -44,7 +44,7 @@ export function Docs() {
   return (
     <div className="grid gap-6">
       <header className="max-w-2xl">
-        <h1 className="font-serif text-4xl tracking-tight">Formulas &amp; models</h1>
+        <h1 className="font-serif text-3xl tracking-tight sm:text-4xl">Formulas &amp; models</h1>
         <p className="mt-3 text-zinc-400">
           Every number DataVerify produces is computed, not hand-set. This page is the reference:
           how prices, severities and verification verdicts are derived.

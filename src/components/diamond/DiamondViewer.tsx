@@ -224,11 +224,11 @@ export function DiamondViewer() {
         <span className="text-fail">unverified code</span>, or a new owner, marks that chain as likely malicious.
       </p>
 
-      <section className="mb-4 grid gap-3 rounded-2xl border border-line bg-panel p-4 shadow-2xl">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-2">
+      <section className="mb-4 grid gap-3 rounded-2xl border border-line bg-panel p-3 shadow-2xl sm:p-4">
+        <div className="grid gap-3 sm:gap-4">
+          <div className="grid min-w-0 gap-2 sm:flex sm:flex-wrap sm:items-center">
             <select
-              className={FIELD}
+              className={`${FIELD} w-full sm:w-auto`}
               value={diamondId}
               disabled={busy !== null}
               onChange={(event) => setDiamondId(event.target.value)}
@@ -239,9 +239,12 @@ export function DiamondViewer() {
                 </option>
               ))}
             </select>
-            <span className="font-mono text-xs text-zinc-500">{diamond.address}</span>
+            <span className="min-w-0 truncate font-mono text-xs text-zinc-500" title={diamond.address}>
+              <span className="sm:hidden">{shortAddress(diamond.address)}</span>
+              <span className="hidden sm:inline">{diamond.address}</span>
+            </span>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:items-center">
             <button
               type="button"
               className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-ink disabled:opacity-60"
@@ -250,27 +253,29 @@ export function DiamondViewer() {
             >
               {busy === "check" ? "Checking…" : "Check all chains"}
             </button>
-            <select
-              className={FIELD}
-              value={target}
-              disabled={busy !== null}
-              onChange={(event) => setTarget(Number(event.target.value))}
-            >
-              {diamond.chainIds.map((chainId) => (
-                <option key={chainId} value={chainId}>
-                  {diamondChain(chainId)?.name ?? chainId}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              className="rounded-lg border border-fail/50 px-3 py-2 text-sm text-fail disabled:opacity-60"
-              disabled={busy !== null}
-              onClick={() => void start("simulate")}
-              title="Plants a fake unverified facet on the selected chain for this run only; real chains and the manifest are untouched"
-            >
-              {busy === "simulate" ? "Checking…" : "Simulate attack"}
-            </button>
+            <div className="grid grid-cols-[1fr_auto] gap-2 sm:flex sm:items-center">
+              <select
+                className={`${FIELD} min-w-0`}
+                value={target}
+                disabled={busy !== null}
+                onChange={(event) => setTarget(Number(event.target.value))}
+              >
+                {diamond.chainIds.map((chainId) => (
+                  <option key={chainId} value={chainId}>
+                    {diamondChain(chainId)?.name ?? chainId}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="rounded-lg border border-fail/50 px-3 py-2 text-sm whitespace-nowrap text-fail disabled:opacity-60"
+                disabled={busy !== null}
+                onClick={() => void start("simulate")}
+                title="Plants a fake unverified facet on the selected chain for this run only; real chains and the manifest are untouched"
+              >
+                {busy === "simulate" ? "Checking…" : "Simulate attack"}
+              </button>
+            </div>
           </div>
         </div>
         {busy ? (
@@ -278,7 +283,7 @@ export function DiamondViewer() {
             Reading the diamond on {diamond.chainIds.length} chains, checking Sourcify and writing to Arkiv. About 15 seconds.
           </p>
         ) : null}
-        {error ? <p className="text-sm text-fail">{error}</p> : null}
+        {error ? <p className="text-sm break-words text-fail">{error}</p> : null}
         {owner === getAddress(ZERO_ADDRESS) ? (
           <p className="text-sm text-mismatch">Set VITE_WATCHER_ADDRESS so the page keeps only your watcher wallet’s results.</p>
         ) : null}
@@ -294,7 +299,7 @@ export function DiamondViewer() {
         <div className="grid gap-4">
           <Headline rows={latest.rows} />
 
-          <div className="flex items-baseline justify-between gap-3 px-1">
+          <div className="flex flex-col gap-1 px-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
             <p className="text-sm text-zinc-400">Latest run · {runTime(latest.run)}</p>
             {latest.rows[0]?.evidence ? (
               <a
@@ -308,7 +313,7 @@ export function DiamondViewer() {
             ) : null}
           </div>
 
-          <ul className="grid items-start gap-3 md:grid-cols-2">
+          <ul className="grid items-start gap-3 sm:grid-cols-2">
             {latest.rows.map((row) => {
               const chain = diamondChain(Number(row.chainId))
               const findings = findingsFor(row)
@@ -370,8 +375,8 @@ export function DiamondViewer() {
               <h3 className="mb-2 text-[11px] tracking-[0.14em] text-zinc-500 uppercase">Earlier runs</h3>
               <ul className="grid gap-1.5">
                 {ordered.slice(1, 12).map((item) => (
-                  <li key={String(item.run)} className="flex flex-wrap items-center gap-3 font-mono text-xs text-zinc-400">
-                    <span className="w-44">{runTime(item.run)}</span>
+                  <li key={String(item.run)} className="flex flex-wrap items-center gap-2 font-mono text-xs text-zinc-400 sm:gap-3">
+                    <span className="w-full sm:w-44">{runTime(item.run)}</span>
                     {item.rows.map((row) => (
                       <span key={row.key} className="inline-flex items-center gap-1" title={row.detail}>
                         <span className={`size-2 rounded-full ${SEV_DOT[row.severity] ?? "bg-zinc-600"}`} />

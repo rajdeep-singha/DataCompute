@@ -94,9 +94,9 @@ export function AlertsViewer() {
 
       <WatcherPanel onRun={() => void load(filters)} />
 
-      <div className="grid items-start gap-4 lg:grid-cols-[280px_1fr]">
+      <div className="grid min-w-0 items-start gap-4 lg:grid-cols-[280px_1fr]">
         <form
-          className="sticky top-4 grid gap-3 rounded-2xl border border-line bg-panel p-4 shadow-2xl"
+          className="grid gap-3 rounded-2xl border border-line bg-panel p-3 shadow-2xl sm:p-4 sm:grid-cols-2 lg:sticky lg:top-4 lg:grid-cols-1"
           onSubmit={(event) => {
             event.preventDefault()
             void load(filters)
@@ -134,7 +134,7 @@ export function AlertsViewer() {
             </select>
           </label>
 
-          <label className={LABEL}>
+          <label className={`${LABEL} sm:col-span-2 lg:col-span-1`}>
             Proxy address
             <input
               className={`${FIELD} font-mono`}
@@ -144,7 +144,7 @@ export function AlertsViewer() {
             />
           </label>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 sm:col-span-2 lg:col-span-1">
             <button
               className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-ink disabled:opacity-60"
               type="submit"
@@ -161,18 +161,18 @@ export function AlertsViewer() {
             </button>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2 sm:col-span-2 lg:col-span-1">
             {SEVERITIES.map((s) => (
-              <div key={s} className="rounded-xl border border-line px-2 py-2 text-center">
+              <div key={s} className="rounded-xl border border-line px-2.5 py-2.5 text-center">
                 <b className="block font-mono text-lg font-medium">{counts[s]}</b>
-                <span className="text-[10px] tracking-[0.08em] text-zinc-500 uppercase">{s}</span>
+                <span className="text-[11px] text-zinc-500">{s}</span>
               </div>
             ))}
           </div>
         </form>
 
-        <section className="min-h-[420px] overflow-hidden rounded-2xl border border-line bg-panel shadow-2xl">
-          <header className="flex items-baseline justify-between gap-3 border-b border-line px-4 py-4">
+        <section className="min-h-[320px] min-w-0 overflow-hidden rounded-2xl border border-line bg-panel shadow-2xl sm:min-h-[420px]">
+          <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-3 py-3 sm:px-4 sm:py-4">
             <p className="text-zinc-400">{loading ? "Querying Arkiv" : `${rows.length} alerts`}</p>
             <p className="font-mono text-xs text-zinc-500">
               {owner === getAddress(ZERO_ADDRESS) ? "any watcher" : shortAddress(owner)}
@@ -180,7 +180,7 @@ export function AlertsViewer() {
           </header>
 
           {error ? (
-            <p className="px-4 py-6 text-sm text-fail">{error}</p>
+            <p className="px-4 py-6 text-sm break-words text-fail">{error}</p>
           ) : rows.length === 0 && !loading ? (
             <p className="px-4 py-10 text-center text-zinc-400">
               No alerts yet. Click <span className="text-zinc-200">Run watcher now</span> above to write the first ones.
@@ -190,16 +190,16 @@ export function AlertsViewer() {
               {rows.map((row) => (
                 <li
                   key={row.key}
-                  className={`grid gap-2 border-l-2 px-4 py-4 ${SEV_RAIL[row.severity] ?? "border-l-line"}`}
+                  className={`grid gap-2 border-l-2 px-3 py-3 sm:px-4 sm:py-4 ${SEV_RAIL[row.severity] ?? "border-l-line"}`}
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
                       <span
                         className={`inline-flex rounded-full border px-2 py-0.5 font-mono text-xs ${SEV_TONE[row.severity] ?? "text-zinc-300"}`}
                       >
                         {row.severity}
                       </span>
-                      <span className="font-serif text-lg">{row.proxyName}</span>
+                      <span className="font-serif text-base sm:text-lg">{row.proxyName}</span>
                       <a
                         href={`https://etherscan.io/address/${row.proxy}`}
                         target="_blank"
@@ -225,7 +225,7 @@ export function AlertsViewer() {
                       {shortAddress(row.newImpl)}
                     </a>
                     <span
-                      className={`ml-1 rounded border px-1.5 py-0.5 ${
+                      className={`ml-1 rounded border px-2.5 py-1 ${
                         row.verified === "unverified" ? "border-fail/40 text-fail" : "border-line " + (VERIFIED_TONE[row.verified] ?? "text-zinc-400")
                       }`}
                     >
@@ -236,7 +236,7 @@ export function AlertsViewer() {
                         href={swarmUrl(row.evidence)}
                         target="_blank"
                         rel="noreferrer"
-                        className="ml-1 rounded border border-accent/40 px-1.5 py-0.5 text-accent underline-offset-2 hover:underline"
+                        className="ml-1 rounded border border-accent/40 px-2.5 py-1 text-accent underline-offset-2 hover:underline"
                         title="Evidence bundle on Swarm: bytecode + Sourcify metadata"
                       >
                         evidence ↗

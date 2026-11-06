@@ -30,7 +30,8 @@ export function NotifyBell() {
           className="rounded-full border border-accent/50 px-3 py-1.5 text-sm text-accent transition hover:bg-accent hover:text-ink"
           title="Get a system notification when a watched contract upgrades to unverified code"
         >
-          🔔 Enable alerts
+          <span aria-hidden>🔔</span>
+          <span className="shell-bell-label">Enable alerts</span>
         </button>
       ) : (
         <button
@@ -47,7 +48,7 @@ export function NotifyBell() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-pass opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-pass" />
           </span>
-          Monitoring
+          <span className="shell-bell-label">Monitoring</span>
         </button>
       )}
 

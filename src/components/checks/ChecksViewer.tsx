@@ -3,6 +3,7 @@ import { getAddress, isAddress } from "viem"
 import { ZERO_ADDRESS } from "../../config"
 import { describeQuery } from "../../lib/checks/query-text"
 import { arkivTimeoutMessage, browserClient, readChecks } from "../../lib/arkiv/read-checks"
+import { shortAddress } from "../../lib/util/format"
 import { EMPTY_FILTERS, STATUSES, type CheckFilters, type CheckRow, type CheckStatus } from "../../types/check"
 import { CheckTable } from "./CheckTable"
 import { FilterPanel } from "./FilterPanel"
@@ -70,7 +71,7 @@ export function ChecksViewer() {
         </p>
       ) : null}
 
-      <div className="grid items-start gap-4 lg:grid-cols-[280px_1fr]">
+      <div className="grid min-w-0 items-start gap-4 lg:grid-cols-[280px_1fr]">
         <FilterPanel
           filters={filters}
           counts={counts}
@@ -78,11 +79,11 @@ export function ChecksViewer() {
           onChange={setFilters}
           onSubmit={() => void load(filters)}
         />
-        <section className="min-h-[420px] overflow-hidden rounded-2xl border border-line bg-panel shadow-2xl">
-          <header className="flex items-baseline justify-between gap-3 border-b border-line px-4 py-4">
+        <section className="min-h-[320px] min-w-0 overflow-hidden rounded-2xl border border-line bg-panel shadow-2xl sm:min-h-[420px]">
+          <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-3 py-3 sm:px-4 sm:py-4">
             <p className="text-zinc-400">{loading ? "Querying Arkiv" : `${rows.length} checks`}</p>
-            <p className="font-mono text-xs text-zinc-500">
-              {owner === getAddress(ZERO_ADDRESS) ? "any owner" : owner}
+            <p className="max-w-full truncate font-mono text-xs text-zinc-500" title={owner}>
+              {owner === getAddress(ZERO_ADDRESS) ? "any owner" : shortAddress(owner)}
             </p>
           </header>
           <CheckTable rows={rows} headBlock={headBlock} loading={loading} error={error} />

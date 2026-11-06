@@ -4,7 +4,7 @@ import type { FilterPanelProps } from "../../types/ui"
 export function FilterPanel({ filters, counts, loading, onChange, onSubmit }: FilterPanelProps) {
   return (
     <form
-      className="sticky top-4 grid gap-3 rounded-2xl border border-line bg-panel p-4 shadow-2xl"
+      className="grid gap-3 rounded-2xl border border-line bg-panel p-3 shadow-2xl sm:grid-cols-2 sm:p-4 lg:sticky lg:top-4 lg:grid-cols-1"
       onSubmit={(event) => {
         event.preventDefault()
         onSubmit()
@@ -62,7 +62,7 @@ export function FilterPanel({ filters, counts, loading, onChange, onSubmit }: Fi
         />
       </label>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 sm:col-span-2 lg:col-span-1">
         <button
           className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-ink disabled:opacity-60"
           type="submit"
@@ -81,11 +81,11 @@ export function FilterPanel({ filters, counts, loading, onChange, onSubmit }: Fi
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:col-span-2 lg:col-span-1">
         {STATUSES.map((status) => (
           <div key={status} className="rounded-xl border border-line px-3 py-2">
             <b className="block font-mono text-lg font-medium">{counts[status]}</b>
-            <span className="text-[11px] tracking-[0.08em] text-zinc-500 uppercase">{status}</span>
+            <span className="text-[11px] text-zinc-500">{status}</span>
           </div>
         ))}
       </div>

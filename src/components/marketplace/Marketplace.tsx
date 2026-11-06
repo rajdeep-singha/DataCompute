@@ -83,9 +83,9 @@ export function Marketplace() {
   const open = rows.find((listing) => listing.key === openKey) ?? null
 
   return (
-    <div className="grid items-start gap-4 lg:grid-cols-[280px_1fr]">
-      <div className="sticky top-4 grid gap-3">
-        <div className="grid gap-3 rounded-2xl border border-line bg-panel p-4 shadow-2xl">
+    <div className="grid min-w-0 items-start gap-4 lg:grid-cols-[280px_1fr]">
+      <div className="grid gap-3 lg:sticky lg:top-4">
+        <div className="grid gap-3 rounded-2xl border border-line bg-panel p-3 shadow-2xl sm:p-4 sm:grid-cols-2 lg:grid-cols-1">
           <label className="grid gap-1.5 text-[11px] tracking-[0.14em] text-zinc-500 uppercase">
             Type
             <select
@@ -111,7 +111,7 @@ export function Marketplace() {
             />
           </label>
           <button
-            className="rounded-lg border border-line px-3 py-2 text-sm"
+            className="rounded-lg border border-line px-3 py-2 text-sm sm:col-span-2 lg:col-span-1"
             type="button"
             onClick={() => setShowForm((prev) => !prev)}
           >
@@ -128,9 +128,11 @@ export function Marketplace() {
         ) : null}
       </div>
 
-      <section className="grid content-start gap-3 sm:grid-cols-2">
+      <section className="grid min-w-0 content-start gap-3 sm:grid-cols-2">
         {error ? (
-          <p className="rounded-xl border border-dashed border-line px-4 py-3 text-sm text-fail sm:col-span-2">{error}</p>
+          <p className="rounded-xl border border-dashed border-line px-4 py-3 text-sm break-words text-fail sm:col-span-2">
+            {error}
+          </p>
         ) : null}
         {loading ? (
           <p className="text-zinc-400">Reading listings from Arkiv…</p>
@@ -179,10 +181,15 @@ function ListingDialog({ onClose, children }: { onClose: () => void; children: R
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4 sm:p-10"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-3 sm:p-10"
       onClick={onClose}
     >
-      <div role="dialog" aria-modal="true" className="my-8 w-full max-w-3xl" onClick={(event) => event.stopPropagation()}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="my-4 w-full max-w-3xl sm:my-8"
+        onClick={(event) => event.stopPropagation()}
+      >
         {children}
       </div>
     </div>
@@ -212,7 +219,7 @@ function ListingCard({ listing, attestation, owned, onOpen }: CardProps) {
         <h3 className="font-serif text-xl leading-tight">{listing.title}</h3>
         <p className="mt-1 line-clamp-2 text-sm text-zinc-400">{listing.summary}</p>
       </div>
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <span className="font-mono text-lg text-accent">{priceLabel(listing.priceWei)}</span>
         <span className="font-mono text-[11px] text-zinc-500">Open →</span>
       </div>
@@ -316,9 +323,9 @@ function ListingDetail({ listing, attestation, owned, buyer, connected, onPurcha
   }
 
   return (
-    <article className="grid gap-3 rounded-2xl border border-line bg-panel p-4 shadow-2xl">
+    <article className="grid min-w-0 gap-3 rounded-2xl border border-line bg-panel p-3 shadow-2xl sm:p-4">
       <header className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+        <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <TrustBadge attestation={attestation} />
             <span className="rounded-full border border-line px-2 py-0.5 font-mono text-[11px] text-accent">
@@ -328,12 +335,12 @@ function ListingDetail({ listing, attestation, owned, buyer, connected, onPurcha
               <span className="font-mono text-[11px] text-zinc-500">{listing.category}</span>
             ) : null}
           </div>
-          <h3 className="mt-2 font-serif text-xl leading-tight">{listing.title}</h3>
+          <h3 className="mt-2 font-serif text-lg leading-tight sm:text-xl">{listing.title}</h3>
           <p className="mt-1 max-w-prose text-sm text-zinc-400">{listing.summary}</p>
-          {attestation?.detail ? <p className="mt-1 text-xs text-zinc-500">{attestation.detail}</p> : null}
+          {attestation?.detail ? <p className="mt-1 text-xs break-words text-zinc-500">{attestation.detail}</p> : null}
         </div>
-        <div className="flex items-start gap-4">
-          <div className="text-right">
+        <div className="flex w-full items-start justify-between gap-4 sm:w-auto sm:justify-end">
+          <div className="text-left sm:text-right">
             <p className="font-mono text-lg text-accent">{priceLabel(listing.priceWei)}</p>
             <p className="font-mono text-[11px] text-zinc-500">to {shortAddress(listing.payTo)}</p>
           </div>

@@ -4,7 +4,7 @@ import { StatusBadge } from "./StatusBadge"
 
 export function CheckTable({ rows, headBlock, loading, error }: CheckTableProps) {
   if (error) {
-    return <p className="px-5 py-10 text-fail">{error}</p>
+    return <p className="px-4 py-8 text-sm break-words text-fail sm:px-5 sm:py-10">{error}</p>
   }
   if (loading && rows.length === 0) {
     return <p className="px-5 py-10 text-zinc-400">Reading checks from Arkiv…</p>
@@ -33,7 +33,7 @@ export function CheckTable({ rows, headBlock, loading, error }: CheckTableProps)
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.key} className="border-t border-line align-top hover:bg-white/5">
+            <tr key={row.key} className="border-t border-line align-top">
               <td className="px-4 py-3 font-mono text-sm">{row.symbol}</td>
               <td className="px-4 py-3 font-mono text-xs text-zinc-300">{row.check}</td>
               <td className="px-4 py-3">
