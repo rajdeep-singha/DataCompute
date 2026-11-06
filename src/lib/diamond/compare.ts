@@ -35,6 +35,7 @@ export function compareSnapshot(expected: DiamondSnapshot, live: DiamondSnapshot
       facet: facet.address,
       expected: previous?.address ?? null,
       actual: facet.address,
+      actualCodehash: facet.codehash,
     })
   }
 

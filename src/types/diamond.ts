@@ -39,6 +39,8 @@ export type Finding = {
   /** Expected value: facet address for code changes, owner for owner changes. */
   expected: string | null
   actual: string | null
+  /** Captures code changes even when the facet address stays the same. */
+  actualCodehash?: Hex
   /** Sourcify status of `facet` on this chain, set for unexpected and changed facets. */
   verified?: VerifiedState
   /** Human-readable signatures for `selectors`, when known. */
