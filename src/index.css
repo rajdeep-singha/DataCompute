@@ -2,25 +2,339 @@
 
 @theme {
   --font-sans: "Public Sans", sans-serif;
-  --font-serif: "Newsreader", serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
-  --color-ink: #121410;
-  --color-panel: #1b2018;
-  --color-line: #31382c;
-  --color-pass: #b6e37a;
-  --color-mismatch: #f0c36a;
-  --color-fail: #f0a090;
-  --color-absent: #9ec4d4;
-  --color-accent: #dff56b;
+  --color-ink: #fffdf7;
+  --color-panel: #f6f1df;
+  --color-line: #1a1a1a;
+  --color-pass: #2f6b3a;
+  --color-mismatch: #8a5a12;
+  --color-fail: #9c2f2f;
+  --color-absent: #5c5c5c;
+  --color-accent: #111111;
+}
+
+html {
+  overflow-x: clip;
+  font-family: "Public Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(900px 420px at 8% -10%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 55%),
-    var(--color-ink);
-  color: #f3f5ee;
+  overflow-x: clip;
+  background: #fffdf7;
+  color: #111111;
+  font-family: "Public Sans", sans-serif;
+}
+
+#root {
+  min-width: 0;
+}
+
+.shell {
+  --glow: #111111;
+  min-height: 100vh;
+  padding-top: 0.8rem;
+  background: #fffdf7;
+  color: #111111;
+  font-family: "Public Sans", sans-serif;
+}
+
+.shell-beam {
+  display: none;
+}
+
+.shell-nav {
+  position: sticky;
+  z-index: 50;
+  top: 0.8rem;
+  display: flex;
+  width: min(1120px, calc(100% - 1.5rem));
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: #f6f1df;
+  padding: 0.6rem 1rem 0.6rem 0.85rem;
+}
+
+.shell-brand {
+  display: flex;
+  shrink: 0;
+  align-items: center;
+  gap: 0.55rem;
+  color: #111;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 1.15rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.shell-mark {
+  width: 42px;
+  height: 42px;
+  animation: hatch-spin 22s linear infinite;
+}
+
+.shell-links {
+  display: none;
+  min-width: 0;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.shell-links a {
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  color: #111;
+  font-size: 0.9rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.shell-links a:hover,
+.shell-links a[aria-current="page"] {
+  background: rgb(0 0 0 / 7%);
+  color: #111;
+}
+
+.shell-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-left: auto;
+}
+
+.shell-actions .shell-bell-label {
+  display: none;
+}
+
+.shell-menu {
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  place-items: center;
+  border: 1px solid #111;
+  border-radius: 999px;
+  background: transparent;
+  color: #111;
+  cursor: pointer;
+}
+
+.shell-drawer {
+  position: sticky;
+  z-index: 49;
+  top: 4.6rem;
+  display: grid;
+  gap: 0.15rem;
+  width: min(1120px, calc(100% - 1.5rem));
+  margin: 0.4rem auto 0;
+  border-radius: 1.1rem;
+  background: #f6f1df;
+  padding: 0.45rem;
+}
+
+.shell-drawer a {
+  border-radius: 0.7rem;
+  padding: 0.72rem 0.85rem;
+  color: #111;
+  text-decoration: none;
+}
+
+.shell-drawer a[aria-current="page"] {
+  background: rgb(0 0 0 / 7%);
+  color: #111;
+}
+
+.shell-main {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2.6rem 0 4rem;
+}
+
+.shell .font-serif {
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.shell .rounded.border,
+.shell .rounded-full.border {
+  padding: 0.42rem 0.75rem;
+  line-height: 1.35;
+}
+
+.shell .rounded-2xl.border.p-3,
+.shell .rounded-2xl.border.p-4 {
+  padding: 1.35rem 1.45rem;
+}
+
+.shell .border-l-2,
+.shell .border-l-4 {
+  padding: 1.05rem 1.25rem;
+}
+
+.shell .rounded-2xl.border > header {
+  padding: 1.05rem 1.25rem;
+}
+
+.shell :is(th, td) {
+  padding: 0.75rem 0.95rem;
+}
+
+.shell :is(input, select, textarea) {
+  padding: 0.7rem 0.95rem;
+  line-height: 1.4;
+}
+
+.shell :is(button, a).bg-accent,
+.shell button.border:not(.rounded-full) {
+  padding: 0.7rem 1.15rem;
+}
+
+.shell :is(.text-zinc-100, .text-zinc-200, .hover\:text-zinc-200:hover) {
+  color: #111;
+}
+
+.shell .text-zinc-300 {
+  color: #242424;
+}
+
+.shell .hover\:text-zinc-300:hover {
+  color: #111;
+}
+
+.shell .text-zinc-400 {
+  color: #3a3a3a;
+}
+
+.shell .text-zinc-500 {
+  color: #5a5a5a;
+}
+
+.shell .text-zinc-600 {
+  color: #444;
+}
+
+.shell :is(.bg-\[\#12160f\], .bg-\[\#10130e\]) {
+  background-color: #f6f1df;
+}
+
+.shell :is(.shadow-xl, .shadow-2xl) {
+  box-shadow: none;
+}
+
+.shell :is(a, button).bg-accent {
+  border-radius: 999px;
+}
+
+.shell .lg\:sticky {
+  top: 5.5rem;
+}
+
+@media (min-width: 1100px) {
+  .shell-links { display: flex; }
+  .shell-menu { display: none; }
+  .shell-actions .shell-bell-label { display: inline; }
+}
+
+@keyframes hatch-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-mark { animation: none; }
+  .shell :is(a, button) { transition: none; }
+}
+
+.shell :is(h1, h2, h3),
+.paper :is(h1, h2, h3) {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.shell p,
+.paper p {
+  line-height: 1.6;
+}
+
+.shell :is(button, input, select, textarea),
+.paper :is(button, input, select, textarea) {
+  font-family: "Public Sans", sans-serif;
+}
+
+.shell button:not(.grid),
+.shell :is(a.bg-accent, a.rounded-full),
+.paper a.enter,
+.paper button {
+  font-weight: 500;
+  letter-spacing: -0.011em;
+}
+
+.shell :is(a, button, select),
+.paper :is(a, button) {
+  cursor: pointer;
+}
+
+.shell button:disabled,
+.paper button:disabled {
+  cursor: not-allowed;
+}
+
+.shell :is(a, button),
+.paper :is(a, button) {
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.shell :is(button, a).bg-accent:not(:disabled):hover {
+  background: #3a3a3a;
+  color: #fffdf7;
+}
+
+.shell button.border:not(.rounded-2xl):not(:disabled):hover,
+.shell a.border:hover {
+  background: #111;
+  color: #fffdf7;
+  border-color: #111;
+  text-decoration: none;
+}
+
+.shell button.rounded-2xl:not(:disabled):hover {
+  background: #efe8d4;
+  color: #111;
+}
+
+.shell a:hover {
+  text-decoration-line: underline;
+  text-underline-offset: 0.18em;
+}
+
+.shell :is(.shell-links, .shell-drawer) a:hover,
+.shell-brand:hover,
+.shell a.bg-accent:hover,
+.shell a.rounded-full:hover {
+  text-decoration: none;
+}
+
+.shell-links a:hover,
+.shell-drawer a:hover {
+  background: rgb(0 0 0 / 8%);
+}
+
+.shell-menu:hover {
+  background: #111;
+  color: #fffdf7;
+}
+
+.shell tr:hover {
+  background: rgb(17 17 17 / 4%);
 }
 
 @keyframes fadeIn {
