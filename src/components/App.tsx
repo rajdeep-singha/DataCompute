@@ -7,6 +7,7 @@ import { Intro } from "./Intro"
 import { Landing } from "./Landing"
 import { Layout } from "./Layout"
 import { Marketplace } from "./marketplace/Marketplace"
+import { TelegramSettings } from "./alerts/TelegramSettings"
 
 export function App() {
   return (
@@ -19,6 +20,7 @@ export function App() {
         <Route path="diamond" element={<DiamondViewer />} />
         <Route path="marketplace" element={<Marketplace />} />
         <Route path="checks" element={<ChecksViewer />} />
+        <Route path="telegram" element={<TelegramSettings />} />
         <Route path="docs" element={<Docs />} />
         <Route path="*" element={<Navigate to="/home" replace />} />
       </Route>

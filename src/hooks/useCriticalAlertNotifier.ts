@@ -10,6 +10,7 @@ import {
   requestNotifyPermission,
   type NotifyPermission,
 } from "../lib/alerts/notify"
+import { notifyTelegramAlert } from "../lib/alerts/telegram-alert"
 import type { AlertRow } from "../types/alert"
 
 const client = browserClient()
@@ -83,6 +84,7 @@ export function useCriticalAlertNotifier() {
 
         for (const alert of fresh) {
           notifyMalicious(alert)
+          notifyTelegramAlert(alert)
           seen.add(alert.key)
           setLastAlert(alert)
         }

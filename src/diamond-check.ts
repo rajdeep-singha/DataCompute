@@ -1,5 +1,6 @@
 import "dotenv/config"
 import { runDiamondCheck } from "./lib/diamond/check"
+import { flushTelegram } from "./lib/notifications/telegram"
 
 function flag(name: string): string | undefined {
   const index = process.argv.indexOf(name)
@@ -9,11 +10,11 @@ function flag(name: string): string | undefined {
 async function main() {
   const diamondId = process.argv[2] && !process.argv[2].startsWith("--") ? process.argv[2] : "lifi"
   const simulate = flag("--simulate")
-  await runDiamondCheck({
+  try { await runDiamondCheck({
     diamondId,
     simulate: simulate ? Number(simulate) : undefined,
     log: console.log,
-  })
+  }) } finally { await flushTelegram() }
 }
 
 main().catch((error) => {

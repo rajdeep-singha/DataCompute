@@ -1,5 +1,6 @@
 import "dotenv/config"
 import { resetWatcher, runWatch } from "./lib/alerts/watcher"
+import { flushTelegram } from "./lib/notifications/telegram"
 
 function flag(name: string): string | undefined {
   const index = process.argv.indexOf(name)
@@ -12,7 +13,8 @@ async function main() {
     console.log("resetting watcher")
     await resetWatcher(console.log)
   }
-  await runWatch({ simulate: flag("--simulate"), log: console.log })
+  try { await runWatch({ simulate: flag("--simulate"), log: console.log }) }
+  finally { await flushTelegram() }
 }
 
 main().catch((error) => {

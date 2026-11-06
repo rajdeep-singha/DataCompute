@@ -28,7 +28,7 @@ export function NotifyBell() {
           type="button"
           onClick={() => void enable()}
           className="rounded-full border border-accent/50 px-3 py-1.5 text-sm text-accent transition hover:bg-accent hover:text-ink"
-          title="Get a system notification when a watched contract upgrades to unverified code"
+          title="Get a browser alert and a Telegram message when a watched contract upgrades to unverified code"
         >
           <span aria-hidden>🔔</span>
           <span className="shell-bell-label">Enable alerts</span>

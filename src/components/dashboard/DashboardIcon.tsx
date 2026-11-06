@@ -4,6 +4,7 @@ const paths: Record<string, string> = {
   diamond: "m12 3 9 8-9 10-9-10 9-8Z M3 11h18 M8 4l4 17 4-17",
   checks: "M9 4h10v17H5V4h4 M9 2h6v4H9z M8 12l2 2 5-5 M8 18h8",
   market: "M3 9h18l-2-6H5L3 9Z M4 9v12h16V9 M9 21v-7h6v7",
+  telegram: "m21 3-4 18-6-5-4 3 1-7L21 3ZM8 12l-5-2 18-7 M8 12l9-6-6 10",
   docs: "M12 5C8 2 3 3 3 3v16s5-1 9 2c4-3 9-2 9-2V3s-5-1-9 2Zm0 0v16",
   menu: "M4 6h16 M4 12h16 M4 18h16",
 }

@@ -4,5 +4,6 @@ export const DASHBOARD_NAV = [
   { to: "/diamond", label: "Diamond inspector", icon: "diamond", description: "Compare facets against a trusted manifest" },
   { to: "/checks", label: "Token checks", icon: "checks", description: "Explore public verification records" },
   { to: "/marketplace", label: "Data marketplace", icon: "market", description: "Discover attested real-world data" },
+  { to: "/telegram", label: "Telegram bot", icon: "telegram", description: "Receive contract alerts in Telegram" },
   { to: "/docs", label: "Documentation", icon: "docs", description: "Understand the verification process" },
 ] as const

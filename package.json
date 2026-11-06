@@ -43,9 +43,11 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "diamond:pin": "tsx src/diamond-pin.ts",
     "diamond:check": "tsx src/diamond-check.ts",
-    "test": "tsx --test src/lib/checks/checks.test.ts src/lib/diamond/compare.test.ts"
+    "test": "tsx --test src/lib/checks/checks.test.ts src/lib/diamond/compare.test.ts src/lib/notifications/*.test.ts",
+    "monitor": "tsx src/monitor.ts",
+    "telegram": "tsx src/telegram.ts"
   },
   "engines": {
-    "node": ">=22.10"
+    "node": ">=22.13"
   }
 }

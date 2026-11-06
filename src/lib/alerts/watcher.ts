@@ -11,6 +11,7 @@ import { fitStr } from "../util/fit-str"
 import { checkVerified, type VerifiedStatus } from "./sourcify"
 import { swarmEnabled, uploadToSwarm } from "./swarm"
 import { arkivClients } from "../arkiv/write-checks"
+import { notifyProxy } from "../notifications/events"
 
 type Eth = ReturnType<typeof ethereumClient>
 type Clients = ReturnType<typeof arkivClients>
@@ -173,6 +174,8 @@ export async function runWatch(options: WatchOptions = {}): Promise<WatchRun> {
     }
 
     if (simulate && item.name.toLowerCase() === simulate) {
+      notifyProxy({ proxy, name: item.name, oldImpl: implementation, newImpl: SIMULATED_IMPL, block,
+        verified: "unverified", severity: "critical", simulated: true })
       const evidence = await evidenceReference(eth, log, {
         proxy,
         proxyName: item.name,
@@ -207,6 +210,10 @@ export async function runWatch(options: WatchOptions = {}): Promise<WatchRun> {
     const prior = state.get(proxy.toLowerCase())
     if (prior && isAddressEqual(prior.impl, implementation)) {
       log(`  ${item.name}: unchanged (${implementation})`)
+      // Reconcile the notification baseline too (e.g. after a failed Arkiv write
+      // followed by a return to the old implementation).
+      notifyProxy({ proxy, name: item.name, oldImpl: implementation, newImpl: implementation,
+        block, verified: "unknown", severity: "info", baseline: true })
       await upsertState(clients, prior, { proxy, proxyName: item.name, impl: implementation, block })
       results.push({ name: item.name, proxy, outcome: "unchanged", implementation })
       continue
@@ -219,6 +226,9 @@ export async function runWatch(options: WatchOptions = {}): Promise<WatchRun> {
     const detail = baseline
       ? `baseline: now watching ${slot} proxy at ${implementation} (${verified})`
       : `implementation changed to ${implementation} (${verified})`
+
+    // Persist delivery intent before optional evidence uploads or Arkiv writes.
+    notifyProxy({ proxy, name: item.name, oldImpl, newImpl: implementation, block, verified, severity, baseline })
 
     const evidence = await evidenceReference(eth, log, {
       proxy,

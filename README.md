@@ -151,6 +151,121 @@ upgrades; `--simulate` is the reliable on-demand trigger for the demo.
 Code: [`src/lib/notify.ts`](./src/lib/notify.ts),
 [`src/hooks/useCriticalAlertNotifier.ts`](./src/hooks/useCriticalAlertNotifier.ts).
 
+## Telegram notifications and continuous monitoring
+
+Telegram delivery runs on the backend and works with the website closed. Both
+proxy upgrades and diamond findings enqueue messages as soon as classification
+finishes, before Swarm uploads or Arkiv writes. These are **detection notices**:
+the message explicitly says audit evidence may still be pending. A failed Arkiv
+write does not invalidate or retract the observed finding. This first version
+links to the contract and dashboard; it does not send a follow-up evidence link.
+
+Requires **Node >=22.13** for built-in SQLite (Node may print an experimental
+SQLite warning). No additional service or npm dependency is needed.
+
+### Connect your bot
+
+Open **Telegram bot** in the dashboard sidebar (`/telegram`) for setup steps,
+current configuration status, and a link to your bot. The page reads the bot's
+public identity from Telegram and never exposes the bot token or destination
+chat ID. **Ready to test** means the bot is verified and a destination is
+configured; use a simulation to verify actual delivery. Opening the bot does
+not automatically subscribe a visitor—the destination is shared by the workspace.
+
+1. Create a dedicated bot with [@BotFather](https://t.me/BotFather), using `/newbot`.
+2. Add `TELEGRAM_BOT_TOKEN` to your local `.env` (never a `VITE_` variable).
+3. Open the bot in Telegram and send `/start`. For a group, add the bot and send
+   a command addressed to it; ensure it can post messages.
+4. Run `npm run telegram -- chats`, then put the intended `TELEGRAM_CHAT_ID` in
+   `.env`. This reads recent bot updates; it does not send a message. Use a
+   dedicated bot without an existing webhook. For a channel, configure its
+   chat ID and grant the bot permission to post.
+
+   If the bot token is missing, the command prompts for it privately in your
+   terminal (input is hidden) and saves it to the project's `.env` without
+   rewriting other settings. Paste the BotFather token and press Enter. Do not
+   paste it into chat or include it as a command-line argument.
+5. Set `PUBLIC_APP_URL` to the dashboard URL your phone can reach. `localhost`
+   links only work on the machine running the app.
+6. Start `npm run dev:all` and use **Simulate attack** in the Diamond inspector,
+   or **Simulate upgrade** in Upgrade alerts. Telegram messages begin with
+   **🧪 SIMULATION**, separate from live finding state.
+
+See Telegram's [bot setup guide](https://core.telegram.org/bots/features#botfather)
+and [sendMessage API](https://core.telegram.org/bots/api#sendmessage).
+
+### Keep checking automatically
+
+```bash
+npm run monitor               # API server + delivery worker + continuous checks
+npm run dev                   # optional frontend, in a separate terminal
+```
+
+Alternatively set `MONITOR_ENABLED=true` and use the normal server/dev:all
+command. **Run one API/monitor process**, not both `server` and `monitor`.
+Scheduled checks share the API's writer lock with manual checks and simulations.
+Do not run the standalone watcher/diamond CLI concurrently with the monitor:
+their Arkiv writer lock is process-local.
+
+Each cycle checks proxies and then configured diamonds. The default delay is
+60 seconds **after the previous cycle finishes**, configurable with
+`MONITOR_INTERVAL_SECONDS` (minimum 15). A cycle skips if a manual check is
+already running. Diamond chains notify independently as each chain finishes.
+End-to-end latency includes that cadence, RPC reads, source verification and
+Telegram delivery. This is periodic state monitoring, not a guarantee of seeing
+every intermediate upgrade between polls. It does not monitor arbitrary storage
+or all contract activity. Normal block/reorganization uncertainty also applies.
+
+The proxy watcher still refreshes Arkiv state on unchanged passes; diamond
+checks still write a batch every cycle. Budget RPC usage and the funded writer
+wallet accordingly. Initial proxy baselines stay silent. A diamond's existing
+deviation from its pinned manifest is reported on the first check.
+
+### Delivery behavior and operations
+
+- Real proxy upgrades and changed diamond findings notify. Identical unresolved
+  diamond findings are suppressed across restarts. Matching the manifest again
+  sends a recovery message. Monitoring outages/restoration use separate alerts.
+- Simulations always produce their own notices and cannot clear live findings.
+- Source verification is a risk signal, not proof that code is safe or malicious.
+- Pending jobs, retry schedules and observation state live in
+  `data/telegram.sqlite` (gitignored). Set `TELEGRAM_OUTBOX_PATH` to a persistent
+  local disk path on deployment. SQLite coordinates delivery workers on one
+  host; this is not a distributed queue for multiple hosts or network storage.
+- Telegram network/5xx failures retry with exponential backoff; 429 responses
+  respect `retry_after`. Sends are spaced by at least 3.1 seconds per destination.
+  4xx configuration/permission failures remain marked failed for operator repair.
+- The bot token is not stored in SQLite and errors do not expose Telegram URLs.
+  Queue state is scoped to bot ID + chat ID, so changing destinations does not
+  forward old queued messages to a new recipient.
+- Delivery is **at least once**: a crash or lost response after Telegram accepts
+  a message can cause a repeat. Telegram has no sendMessage idempotency key.
+  Disk errors are logged without failing the check, but can lose notification
+  intent; monitor disk health. Notifications do not backfill historical Arkiv rows.
+
+```bash
+npm run telegram -- status    # pending/failed counts for the configured bot/chat
+npm run telegram -- retry     # requeue failed jobs after fixing credentials/permissions
+npm run telegram -- worker    # delivery/retries only; no contract checks or Arkiv writes
+```
+
+Standalone `watch` and `diamond:check` commands enqueue notifications and attempt
+one due delivery on exit. Keep the API or delivery worker running to drain all
+messages and retry failures. API startup also resumes pending deliveries.
+
+### Public deployment
+
+The API binds to `127.0.0.1` by default. Set a strong `WATCH_API_TOKEN` before
+exposing it publicly, **including through a reverse proxy**; a non-loopback
+`HOST` requires that token. The web UI asks for the operator token on the first
+protected check and retains it only in memory. Use HTTPS. Never share this
+operator credential with public viewers or put it in frontend environment vars.
+Both check endpoints also have a shared 10-second cooldown. For a public demo,
+an operator can trigger simulations while viewers browse the read-only results.
+
+Code: [`src/lib/notifications/`](./src/lib/notifications/),
+[`server/monitor.ts`](./server/monitor.ts).
+
 ## Cross-chain diamond check (which chain is malicious?)
 
 An [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535) diamond has no single

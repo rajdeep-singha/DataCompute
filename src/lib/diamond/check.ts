@@ -12,6 +12,7 @@ import { classify, compareSnapshot, summarize } from "./compare"
 import { readDiamond } from "./loupe"
 import { readManifest } from "./manifest"
 import { lookupSignatures } from "./signatures"
+import { notifyDiamond } from "../notifications/events"
 
 type Log = (line: string) => void
 
@@ -125,9 +126,11 @@ export async function runDiamondCheck(options: DiamondCheckOptions): Promise<Dia
   log(`${diamond.name} ${address} on ${diamond.chainIds.length} chains`)
 
   const results = await Promise.all(
-    diamond.chainIds.map((chainId) =>
-      checkChain(address, chainId, manifest.chains[String(chainId)], chainId === simulate, log),
-    ),
+    diamond.chainIds.map(async (chainId) => {
+      const result = await checkChain(address, chainId, manifest.chains[String(chainId)], chainId === simulate, log)
+      notifyDiamond(diamond.name, address, result, chainId === simulate)
+      return result
+    }),
   )
 
   let evidence = ""

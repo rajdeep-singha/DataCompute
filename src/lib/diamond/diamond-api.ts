@@ -1,10 +1,11 @@
 import type { DiamondRun } from "../../types/diamond"
+import { operatorFetch } from "../alerts/operator-fetch"
 
 /** Asks the local server to check one diamond. `simulate` is a chain id to plant a fake malicious facet on. */
 export async function requestDiamondCheck(diamond: string, simulate?: number): Promise<DiamondRun> {
   let res: Response
   try {
-    res = await fetch("/api/diamond", {
+    res = await operatorFetch("/api/diamond", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(simulate === undefined ? { diamond } : { diamond, simulate }),

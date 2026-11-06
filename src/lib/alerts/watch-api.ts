@@ -1,10 +1,11 @@
 import type { WatchRun } from "../../types/alert"
+import { operatorFetch } from "./operator-fetch"
 
 /** Asks the local server to run one watcher pass. `simulate` names a watchlist proxy. */
 export async function requestWatch(simulate?: string): Promise<WatchRun> {
   let res: Response
   try {
-    res = await fetch("/api/watch", {
+    res = await operatorFetch("/api/watch", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(simulate ? { simulate } : {}),
